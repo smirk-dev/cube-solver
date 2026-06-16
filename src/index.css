@@ -58,32 +58,55 @@
     Consolas, "Liberation Mono", monospace;
 }
 
+/* Dark palette. Applied explicitly via [data-theme="dark"] (the toggle) and
+   automatically when the OS prefers dark — unless the user forced light. */
+[data-theme='dark'] {
+  --bg: #09090b;
+  --surface: #131316;
+  --surface-2: #1c1c20;
+  --surface-3: #26262b;
+  --border: #27272a;
+  --border-strong: #3f3f46;
+  --text: #fafafa;
+  --text-muted: #a1a1aa;
+  --text-faint: #71717a;
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-press: #c7d2fe;
+  --accent-soft: #1e1b3a;
+  --on-accent: #0b0b14;
+  --danger: #f87171;
+  --danger-soft: #2a1416;
+  --success: #4ade80;
+  --success-soft: #102315;
+  --warn: #fbbf24;
+  --warn-soft: #2a1f08;
+  --sticker-empty: #3f3f46;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #09090b;
     --surface: #131316;
     --surface-2: #1c1c20;
     --surface-3: #26262b;
     --border: #27272a;
     --border-strong: #3f3f46;
-
     --text: #fafafa;
     --text-muted: #a1a1aa;
     --text-faint: #71717a;
-
     --accent: #818cf8;
     --accent-hover: #a5b4fc;
     --accent-press: #c7d2fe;
     --accent-soft: #1e1b3a;
     --on-accent: #0b0b14;
-
     --danger: #f87171;
     --danger-soft: #2a1416;
     --success: #4ade80;
     --success-soft: #102315;
     --warn: #fbbf24;
     --warn-soft: #2a1f08;
-
     --sticker-empty: #3f3f46;
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   }

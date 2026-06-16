@@ -77,7 +77,6 @@ export function InputPanel() {
         </div>
       </div>
 
-      {def.note && !shapeMod && <p className={styles.note}>{def.note}</p>}
       {shapeMod && (
         <div className={styles.explainer}>
           <strong>Why manual?</strong> {def.label} cubes are a single color — there’s nothing for a

@@ -26,7 +26,7 @@ const edge = spawn(
     '--enable-unsafe-swiftshader',
     '--disable-gpu',
     `--remote-debugging-port=${port}`,
-    '--window-size=1280,900',
+    `--window-size=${process.env.WINDOW || '1280,900'}`,
     '--no-first-run',
     ...extraFlags,
     url,

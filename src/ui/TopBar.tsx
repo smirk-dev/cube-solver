@@ -1,4 +1,5 @@
 import { CubeTypePills } from './CubeTypePills';
+import { ThemeToggle } from './ThemeToggle';
 import styles from './TopBar.module.css';
 
 export function TopBar() {
@@ -13,7 +14,10 @@ export function TopBar() {
         </span>
         <span className={styles.word}>Cube Solver</span>
       </div>
-      <CubeTypePills />
+      <div className={styles.right}>
+        <CubeTypePills />
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

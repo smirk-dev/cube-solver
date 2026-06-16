@@ -43,7 +43,7 @@ export function StepController() {
   if (solveStatus === 'solving') {
     return (
       <div className={styles.panel}>
-        <div className={styles.stage}>
+        <div className={styles.stage} aria-live="polite">
           <span className={styles.spinner} aria-hidden="true" />
           <p className={styles.cue}>Solving…</p>
         </div>
@@ -57,7 +57,7 @@ export function StepController() {
         <div className={styles.head}>
           <span className={styles.counter}>Can’t solve</span>
         </div>
-        <div className={styles.stage}>
+        <div className={styles.stage} aria-live="polite">
           <p className={styles.move} aria-hidden="true">
             !
           </p>
@@ -73,7 +73,7 @@ export function StepController() {
         <div className={styles.head}>
           <span className={styles.counter}>Step 0 of 0</span>
         </div>
-        <div className={styles.stage}>
+        <div className={styles.stage} aria-live="polite">
           <p className={styles.move} aria-hidden="true">
             –
           </p>
@@ -96,7 +96,7 @@ export function StepController() {
         <span className={styles.moveCount}>{total} moves</span>
       </div>
 
-      <div className={styles.stage}>
+      <div className={styles.stage} aria-live="polite">
         {atEnd ? (
           <>
             <p className={styles.solved} aria-hidden="true">
