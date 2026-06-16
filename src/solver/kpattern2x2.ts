@@ -7,8 +7,6 @@
    cubing.js in kpattern2x2.test.ts.
 ---------------------------------------------------------------------------- */
 
-import { cube2x2x2 } from 'cubing/puzzles';
-import { KPattern, type KPuzzle } from 'cubing/kpuzzle';
 import { type Face, type FaceletState } from '../state/facelets';
 
 type FaceletRef = readonly [Face, number];
@@ -55,16 +53,4 @@ export function faceletsToPatternData2x2(facelets: FaceletState): Pattern2x2Data
     orientation[slot] = ori;
   }
   return { CORNERS: { pieces, orientation } };
-}
-
-let kpuzzlePromise: Promise<KPuzzle> | null = null;
-export function get2x2KPuzzle(): Promise<KPuzzle> {
-  if (!kpuzzlePromise) kpuzzlePromise = cube2x2x2.kpuzzle();
-  return kpuzzlePromise;
-}
-
-export async function faceletsToKPattern2x2(facelets: FaceletState): Promise<KPattern> {
-  const kpuzzle = await get2x2KPuzzle();
-  const data = faceletsToPatternData2x2(facelets);
-  return new KPattern(kpuzzle, data as unknown as ConstructorParameters<typeof KPattern>[1]);
 }

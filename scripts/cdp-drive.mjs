@@ -72,6 +72,19 @@ ws.addEventListener('message', (ev) => {
 
 await send('Page.enable');
 await send('Runtime.enable');
+
+const logs = [];
+ws.addEventListener('message', (ev) => {
+  const m = JSON.parse(ev.data);
+  if (m.method === 'Runtime.consoleAPICalled') {
+    const text = (m.params.args || []).map((a) => a.value ?? a.description ?? a.type).join(' ');
+    logs.push(`[${m.params.type}] ${text}`);
+  } else if (m.method === 'Runtime.exceptionThrown') {
+    const d = m.params.exceptionDetails;
+    logs.push(`[exception] ${d.exception?.description || d.text}`);
+  }
+});
+
 await sleep(waitMs);
 
 if (evalExpr) {
@@ -87,6 +100,10 @@ if (evalExpr) {
 const shot = await send('Page.captureScreenshot', { format: 'png' });
 fs.writeFileSync(out, Buffer.from(shot.data, 'base64'));
 console.log('wrote', out);
+if (process.env.LOGS && logs.length) {
+  console.log('--- console ---');
+  for (const l of logs.slice(-25)) console.log(l);
+}
 ws.close();
 edge.kill();
 process.exit(0);

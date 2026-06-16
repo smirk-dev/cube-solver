@@ -25,3 +25,8 @@ dist-ssr
 
 # Local verification screenshots (not shipped)
 /*.png
+
+# Vercel
+.vercel
+
+.vercel

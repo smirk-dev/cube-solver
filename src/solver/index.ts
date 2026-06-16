@@ -1,15 +1,15 @@
 /* ----------------------------------------------------------------------------
    Solver dispatch. Maps a puzzle selection to the right strategy, validates the
-   state, and returns either a solution (as move tokens + setup string for the
-   3D player) or a friendly error.
+   state, and returns either a solution (move tokens + setup string for the 3D
+   player) or a friendly error.
 
-   Phase 1 supports 3×3 (and the mirror/ghost shape-mods, which ride the same
-   mechanism). Larger cubes are added in later phases.
+   2×2 and 3×3 (plus the mirror/ghost shape-mods) solve on the main thread via
+   cubejs. Larger cubes are experimental and not yet available.
 ---------------------------------------------------------------------------- */
 
 import type { FaceletState } from '../state/facelets';
 import type { PuzzleId } from '../state/puzzles';
-import { Alg } from 'cubing/alg';
+import { invertMove, movesToNotation, parseMoves } from '../state/faceletMoves';
 import { validate3x3, validate2x2 } from './validate';
 import { solve3x3 } from './solve3x3';
 import { solve2x2 } from './solve2x2';
@@ -30,37 +30,37 @@ export interface SolveError {
 }
 export type SolveOutcome = SolveResult | SolveError;
 
-/** Split a (flat) solution Alg into individual move tokens. */
-function algToTokens(alg: Alg): string[] {
-  return alg
-    .toString()
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
+function invertNotation(solution: string): string {
+  if (!solution.trim()) return '';
+  return movesToNotation(parseMoves(solution).slice().reverse().map(invertMove));
 }
 
-function resultFromAlg(alg: Alg): SolveResult {
+function resultFromSolution(solution: string): SolveResult {
+  const trimmed = solution.trim();
   return {
     ok: true,
-    moves: algToTokens(alg),
-    algString: alg.toString(),
-    setupString: alg.invert().toString(),
+    moves: trimmed.split(/\s+/).filter(Boolean),
+    algString: trimmed,
+    setupString: invertNotation(trimmed),
   };
 }
 
 export async function solve(state: FaceletState, puzzleId: PuzzleId): Promise<SolveOutcome> {
+  // Let the "Solving…" state paint before any synchronous solver work.
+  await new Promise((r) => setTimeout(r, 0));
+
   try {
     // 3×3 and the 3×3-based shape-mods.
     if (puzzleId === '3x3' || puzzleId === 'mirror' || puzzleId === 'ghost') {
       const v = validate3x3(state);
       if (!v.ok) return { ok: false, reason: v.reason ?? 'This state can’t be solved.' };
-      return resultFromAlg(await solve3x3(state));
+      return resultFromSolution(solve3x3(state));
     }
 
     if (puzzleId === '2x2') {
       const v = validate2x2(state);
       if (!v.ok) return { ok: false, reason: v.reason ?? 'This state can’t be solved.' };
-      return resultFromAlg(await solve2x2(state));
+      return resultFromSolution(solve2x2(state));
     }
   } catch (e) {
     return { ok: false, reason: e instanceof Error ? e.message : 'The solver failed on this state.' };

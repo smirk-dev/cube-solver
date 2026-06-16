@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { cube2x2x2 } from 'cubing/puzzles';
 import type { KPuzzle } from 'cubing/kpuzzle';
-import { solvedState } from '../state/facelets';
+import { FACES, solvedState, type FaceletState } from '../state/facelets';
 import { applyNotation } from '../state/faceletMoves';
-import { faceletsToPatternData2x2, faceletsToKPattern2x2 } from './kpattern2x2';
+import { faceletsToPatternData2x2 } from './kpattern2x2';
 import { solve2x2 } from './solve2x2';
 
 function makeRng(seed: number) {
   let s = seed >>> 0;
   return () => ((s = (s * 1664525 + 1013904223) >>> 0), s / 0x100000000);
 }
-const FACES = ['U', 'R', 'F', 'D', 'L', 'B'];
+const MV = ['U', 'R', 'F', 'D', 'L', 'B'];
 const SUF = ['', "'", '2'];
 function scramble(rng: () => number, len: number): string {
   const out: string[] = [];
@@ -19,9 +19,12 @@ function scramble(rng: () => number, len: number): string {
     let f = Math.floor(rng() * 6);
     if (f === prev) f = (f + 1) % 6;
     prev = f;
-    out.push(FACES[f] + SUF[Math.floor(rng() * 3)]);
+    out.push(MV[f] + SUF[Math.floor(rng() * 3)]);
   }
   return out.join(' ');
+}
+function isSolved(s: FaceletState): boolean {
+  return FACES.every((f) => s.stickers[f].every((v) => v === f));
 }
 
 describe('2×2 converter (cross-validated vs cubing.js)', () => {
@@ -42,19 +45,21 @@ describe('2×2 converter (cross-validated vs cubing.js)', () => {
   });
 });
 
-describe('2×2 solve (end-to-end)', () => {
-  it('solves random scrambles back to solved', async () => {
+describe('2×2 solve (cubejs embedding, including odd-parity cases)', () => {
+  it('solves random scrambles back to solved', () => {
     const rng = makeRng(98765);
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 12; i++) {
       const s = scramble(rng, 12);
       const state = applyNotation(solvedState(2), s);
-      const solution = await solve2x2(state);
-      const pattern = await faceletsToKPattern2x2(state);
-      const solved = pattern.applyAlg(solution);
-      expect(
-        solved.experimentalIsSolved({ ignorePuzzleOrientation: true, ignoreCenterOrientation: true }),
-        `did not solve "${s}"`,
-      ).toBe(true);
+      const solution = solve2x2(state);
+      const result = applyNotation(state, solution);
+      expect(isSolved(result), `solution "${solution}" did not solve "${s}"`).toBe(true);
     }
+  });
+
+  it('solves a single quarter turn (odd corner permutation)', () => {
+    const state = applyNotation(solvedState(2), 'R');
+    const result = applyNotation(state, solve2x2(state));
+    expect(isSolved(result)).toBe(true);
   });
 });

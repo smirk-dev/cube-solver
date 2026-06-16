@@ -33,12 +33,13 @@ input (camera / manual)  →  normalized facelet state  →  solver  →  3D ste
   classified in CIELAB space against the six captured **center** stickers (a
   per-scan white balance), then dropped into the editable grid so you can fix any
   misread before solving.
-- **Solve** — dispatched by puzzle:
-  - 3×3 (and mirror/ghost) → cubing.js two-phase solver.
-  - 2×2 → cubing.js 2×2 solver.
-  - The solver consumes a `KPattern` built by our own facelet↔cubie converter
-    (cubing.js ships none), cross-validated against cubing.js over hundreds of
-    random scrambles.
+- **Solve** — dispatched by puzzle, on the main thread (no workers):
+  - 3×3 (and mirror/ghost) → [cubejs](https://github.com/ldez/cubejs) two-phase
+    (Kociemba) solver, ~20 moves.
+  - 2×2 → solved by embedding its corners in a 3×3 (solved edges/centers) and
+    reusing the 3×3 solver, with a parity fix-up.
+  - Our facelet model maps straight to cubejs's URFDLB facelet string. The 2×2
+    corner converter is cross-validated against cubing.js over 300 scrambles.
 - **Playback** — the solution animates on a [cubing.js](https://js.cubing.net/)
   `TwistyPlayer`. Each step shows the move in big monospace notation, a
   plain-English cue with a direction arrow, a progress bar, and the full move
@@ -47,9 +48,14 @@ input (camera / manual)  →  normalized facelet state  →  solver  →  3D ste
 ## Tech
 
 Vite + React 18 + TypeScript · [cubing.js](https://github.com/cubing/cubing.js)
-(3D rendering, 2×2/3×3 solvers, puzzle definitions) · zustand · plain CSS Modules ·
-Vitest. No UI framework, no backend. Webcam via `getUserMedia` + Canvas (no
-OpenCV — classic LAB classification is enough).
+(3D `TwistyPlayer`, puzzle definitions, the NxN move engine's reference) ·
+[cubejs](https://github.com/ldez/cubejs) (main-thread Kociemba solver) · zustand ·
+plain CSS Modules · Vitest. No UI framework, no backend. Webcam via `getUserMedia`
+with Canvas sampling (no OpenCV — classic LAB classification is enough).
+
+> The solver runs on the main thread via cubejs because cubing.js's solver runs
+> in a web worker that can't be instantiated in a Vite production build (a known,
+> unresolved cubing.js issue). cubing.js still powers the 3D view and converters.
 
 ## Run / build / test
 
