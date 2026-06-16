@@ -1,0 +1,41 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 14px clamp(16px, 4vw, 28px);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: saturate(1.4) blur(8px);
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.mark {
+  display: grid;
+  grid-template-columns: repeat(2, 9px);
+  grid-template-rows: repeat(2, 9px);
+  gap: 2px;
+}
+
+.mark span {
+  border-radius: 2px;
+  background: var(--surface-3);
+}
+
+.mark span:nth-child(1),
+.mark span:nth-child(4) {
+  background: var(--accent);
+}
+
+.word {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}

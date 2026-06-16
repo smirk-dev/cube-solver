@@ -1,0 +1,149 @@
+/* ----------------------------------------------------------------------------
+   Design tokens + reset
+   Minimal, flat, one accent color. Light theme primary, dark via media query.
+---------------------------------------------------------------------------- */
+
+:root {
+  /* Neutral surfaces */
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --surface-3: #ececee;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+
+  /* Text */
+  --text: #18181b;
+  --text-muted: #71717a;
+  --text-faint: #a1a1aa;
+
+  /* Single accent */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-press: #3730a3;
+  --accent-soft: #eef2ff;
+  --on-accent: #ffffff;
+
+  /* Status */
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
+  --warn: #d97706;
+  --warn-soft: #fffbeb;
+
+  /* Standard cube sticker palette (Western scheme) */
+  --sticker-U: #f8f8f8; /* white  */
+  --sticker-D: #ffd500; /* yellow */
+  --sticker-F: #16a34a; /* green  */
+  --sticker-B: #1d4ed8; /* blue   */
+  --sticker-R: #e11d28; /* red    */
+  --sticker-L: #ff7a18; /* orange */
+  --sticker-empty: #d4d4d8;
+
+  /* Shape & motion */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 5px;
+  --gap: 16px;
+  --pad: 20px;
+  --shadow-1: 0 1px 2px rgba(24, 24, 27, 0.04);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  --speed: 160ms;
+
+  /* Type */
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Cascadia Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #09090b;
+    --surface: #131316;
+    --surface-2: #1c1c20;
+    --surface-3: #26262b;
+    --border: #27272a;
+    --border-strong: #3f3f46;
+
+    --text: #fafafa;
+    --text-muted: #a1a1aa;
+    --text-faint: #71717a;
+
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --accent-press: #c7d2fe;
+    --accent-soft: #1e1b3a;
+    --on-accent: #0b0b14;
+
+    --danger: #f87171;
+    --danger-soft: #2a1416;
+    --success: #4ade80;
+    --success-soft: #102315;
+    --warn: #fbbf24;
+    --warn-soft: #2a1f08;
+
+    --sticker-empty: #3f3f46;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Visible focus for keyboard users only */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--radius-xs);
+}
+
+/* Thin, quiet scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

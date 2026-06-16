@@ -1,0 +1,35 @@
+.toggle {
+  display: inline-flex;
+  padding: 3px;
+  gap: 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.option {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 13.5px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  transition: color var(--speed), background var(--speed);
+}
+
+.option:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.option[data-active='true'] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-1);
+}
+
+.option:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
