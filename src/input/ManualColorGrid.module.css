@@ -1,0 +1,77 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.palette {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  transition: transform var(--speed), border-color var(--speed);
+}
+
+.swatch:hover {
+  transform: scale(1.08);
+}
+
+.swatch[data-active='true'] {
+  border-color: var(--text);
+  transform: scale(1.12);
+}
+
+.net {
+  display: grid;
+  grid-template-areas:
+    '. u . .'
+    'l f r b'
+    '. d . .';
+  gap: 10px;
+  touch-action: none;
+}
+
+.face {
+  display: grid;
+  gap: 3px;
+  padding: 3px;
+  background: var(--surface-3);
+  border-radius: 6px;
+}
+
+.sticker {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  transition: transform var(--speed);
+  cursor: pointer;
+}
+
+.sticker:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.sticker[data-locked='true'] {
+  cursor: default;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14), inset 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 540px) {
+  .sticker {
+    width: 22px;
+    height: 22px;
+  }
+}

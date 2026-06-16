@@ -5,8 +5,9 @@ through twisty puzzles — 2×2, 3×3, 4×4, 5×5, general NxN, plus mirror and 
 shape-mods. Everything runs in the browser: **the webcam stream never leaves your
 device, there is no backend, and no data is uploaded.**
 
-> Status: **Phase 0 complete** — scaffold, design system, and the live 3D cube
-> shell are in place. See the roadmap below for what each phase adds.
+> Status: **Phase 1 complete** — the full 3×3 path works end to end: paint a
+> scramble, solve it with the two-phase solver, and step through the animated
+> solution with plain-English move cues. See the roadmap below.
 
 ## How it works
 
@@ -56,7 +57,7 @@ npm run build
 | Phase | Scope | Status |
 | ----- | ----- | ------ |
 | 0 | Scaffold, design system, live 3D cube shell | ✅ |
-| 1 | 3×3 core: manual entry → solve → animated step playback | ⏳ |
+| 1 | 3×3 core: manual entry → solve → animated step playback | ✅ |
 | 2 | Webcam scanning for color cubes | ⏳ |
 | 3 | 4×4 & 5×5 reduction solver (incl. parity) | ⏳ |
 | 4 | General NxN (experimental, capped at 7×7) | ⏳ |

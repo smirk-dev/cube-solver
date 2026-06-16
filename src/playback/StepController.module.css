@@ -1,44 +1,89 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 20px;
   height: 100%;
   justify-content: center;
+  width: 100%;
 }
 
 .head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
 }
 
 .counter {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.02em;
+}
+
+.moveCount {
+  font-size: 12px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
 }
 
 .stage {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   align-items: flex-start;
+  min-height: 132px;
+  justify-content: center;
 }
 
 .move {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   font-family: var(--font-mono);
-  font-size: clamp(40px, 8vw, 64px);
+  font-size: clamp(44px, 8vw, 68px);
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--text);
 }
 
+.arrow {
+  font-family: var(--font-ui);
+  color: var(--accent);
+  font-size: 0.92em;
+}
+
 .cue {
   font-size: 15px;
   color: var(--text-muted);
-  max-width: 36ch;
+  max-width: 40ch;
+}
+
+.error {
+  font-size: 15px;
+  color: var(--danger);
+  max-width: 42ch;
+}
+
+.solved {
+  font-size: clamp(44px, 8vw, 68px);
+  line-height: 1;
+  color: var(--success);
+}
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid var(--surface-3);
+  border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .progressTrack {
@@ -55,6 +100,36 @@
   transition: width var(--speed);
 }
 
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 92px;
+  overflow-y: auto;
+}
+
+.chip {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: color var(--speed), background var(--speed), border-color var(--speed);
+}
+
+.chip[data-state='done'] {
+  color: var(--text-muted);
+}
+
+.chip[data-state='current'] {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
 .controls {
   display: flex;
   align-items: center;
@@ -66,6 +141,9 @@
   font-size: 13px;
   color: var(--text-faint);
   font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nav {
@@ -74,7 +152,7 @@
   background: var(--surface);
   color: var(--text);
   font-weight: 500;
-  padding: 9px 18px;
+  padding: 9px 20px;
   border-radius: var(--radius-sm);
   transition: background var(--speed), border-color var(--speed), opacity var(--speed);
 }
