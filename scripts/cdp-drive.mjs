@@ -17,6 +17,7 @@ const waitMs = Number(process.env.WAIT || 3500);
 const afterMs = Number(process.env.AFTER || 2500);
 const port = Number(process.env.PORT || 9333);
 
+const extraFlags = (process.env.EXTRA_FLAGS || '').split(/\s+/).filter(Boolean);
 const edge = spawn(
   EDGE,
   [
@@ -27,6 +28,7 @@ const edge = spawn(
     `--remote-debugging-port=${port}`,
     '--window-size=1280,900',
     '--no-first-run',
+    ...extraFlags,
     url,
   ],
   { stdio: 'ignore' },

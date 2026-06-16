@@ -36,6 +36,8 @@ interface CubeStore {
   // Editing
   editState: FaceletState;
   paintColor: Face;
+  /** True once a scan has populated the grid and the user is reviewing it. */
+  scanReview: boolean;
 
   // Solve + playback
   solveStatus: SolveStatus;
@@ -53,6 +55,7 @@ interface CubeStore {
   setSticker: (face: Face, index: number, value: Face) => void;
   setPaintColor: (value: Face) => void;
   setEditState: (state: FaceletState) => void;
+  setScanReview: (value: boolean) => void;
   resetEdit: () => void;
   loadPreset: (scramble: string) => void;
 
@@ -86,6 +89,7 @@ export const useCubeStore = create<CubeStore>((set, get) => ({
   // Start on a solvable scramble so the app is immediately demoable.
   editState: presetState("R U R' U R U2 R'"),
   paintColor: 'U',
+  scanReview: false,
 
   ...clearedSolve,
 
@@ -97,6 +101,7 @@ export const useCubeStore = create<CubeStore>((set, get) => ({
         puzzleId: id,
         inputMode,
         editState: solvedState(size),
+        scanReview: false,
         ...clearedSolve,
       };
     }),
@@ -105,10 +110,10 @@ export const useCubeStore = create<CubeStore>((set, get) => ({
     set((state) => {
       const nxnSize = Math.min(NXN_MAX, Math.max(NXN_MIN, Math.round(n)));
       const size = effectiveSize(state.puzzleId, nxnSize);
-      return { nxnSize, editState: solvedState(size), ...clearedSolve };
+      return { nxnSize, editState: solvedState(size), scanReview: false, ...clearedSolve };
     }),
 
-  setInputMode: (mode) => set({ inputMode: mode }),
+  setInputMode: (mode) => set({ inputMode: mode, scanReview: false }),
 
   setSticker: (face, index, value) =>
     set((state) => {
@@ -121,9 +126,17 @@ export const useCubeStore = create<CubeStore>((set, get) => ({
 
   setEditState: (state) => set({ editState: cloneState(state), ...clearedSolve }),
 
-  resetEdit: () => set((state) => ({ editState: solvedState(get().size()), ...clearedSolve, paintColor: state.paintColor })),
+  setScanReview: (value) => set({ scanReview: value }),
 
-  loadPreset: (scramble) => set({ editState: presetState(scramble), ...clearedSolve }),
+  resetEdit: () =>
+    set((state) => ({
+      editState: solvedState(get().size()),
+      scanReview: false,
+      ...clearedSolve,
+      paintColor: state.paintColor,
+    })),
+
+  loadPreset: (scramble) => set({ editState: presetState(scramble), scanReview: false, ...clearedSolve }),
 
   solveCurrent: async () => {
     const { editState, puzzleId } = get();

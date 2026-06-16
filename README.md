@@ -5,9 +5,10 @@ through twisty puzzles — 2×2, 3×3, 4×4, 5×5, general NxN, plus mirror and 
 shape-mods. Everything runs in the browser: **the webcam stream never leaves your
 device, there is no backend, and no data is uploaded.**
 
-> Status: **Phase 1 complete** — the full 3×3 path works end to end: paint a
-> scramble, solve it with the two-phase solver, and step through the animated
-> solution with plain-English move cues. See the roadmap below.
+> Status: **Phase 2 complete** — the full 3×3 path works end to end (paint a
+> scramble, solve, step through the animated solution), plus webcam scanning:
+> a guided six-face capture classifies stickers in LAB space and drops into the
+> grid for review. See the roadmap below.
 
 ## How it works
 
@@ -58,7 +59,7 @@ npm run build
 | ----- | ----- | ------ |
 | 0 | Scaffold, design system, live 3D cube shell | ✅ |
 | 1 | 3×3 core: manual entry → solve → animated step playback | ✅ |
-| 2 | Webcam scanning for color cubes | ⏳ |
+| 2 | Webcam scanning for color cubes | ✅ |
 | 3 | 4×4 & 5×5 reduction solver (incl. parity) | ⏳ |
 | 4 | General NxN (experimental, capped at 7×7) | ⏳ |
 | 5 | Mirror & ghost cubes (manual shape entry) | ⏳ |
@@ -72,6 +73,10 @@ npm run build
   so a camera has no color information to read — you enter them by piece shape.
 - "Optimal" here means *fast and short* (~20 moves for 3×3 in milliseconds), not
   provably move-optimal.
+- **Webcam accuracy depends on lighting.** Classification anchors to the six
+  captured centers (a per-scan white balance) and is robust in synthetic tests,
+  but glare or very warm/cool light can still misread a sticker — every scan
+  lands in the editable grid so you can fix any color before solving.
 
 ## Notes for contributors
 
