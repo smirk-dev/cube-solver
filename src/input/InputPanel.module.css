@@ -72,6 +72,22 @@
   max-width: 60ch;
 }
 
+.explainer {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 70ch;
+  padding: 12px 14px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.explainer strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .body {
   display: flex;
   align-items: center;

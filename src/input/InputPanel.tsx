@@ -20,8 +20,11 @@ export function InputPanel() {
   const setScanReview = useCubeStore((s) => s.setScanReview);
 
   const def = PUZZLES[puzzleId];
-  const solvable = puzzleId === '2x2' || puzzleId === '3x3';
+  const shapeMod = def.kind === 'shapemod'; // mirror / ghost — solved as a 3×3
+  const solvable = puzzleId === '2x2' || puzzleId === '3x3' || shapeMod;
   const colorCube = def.kind === 'color';
+  // 3×3-equivalent states (size 3): real 3×3 plus the shape-mods.
+  const threeByThree = def.size === 3;
 
   const showCamera = inputMode === 'scan' && !scanReview;
   const showGrid = inputMode === 'manual' || (inputMode === 'scan' && scanReview);
@@ -31,7 +34,7 @@ export function InputPanel() {
       <div className={styles.bar}>
         <InputModeToggle />
         <div className={styles.actions}>
-          {puzzleId === '3x3' && inputMode === 'manual' && (
+          {threeByThree && inputMode === 'manual' && (
             <select
               className={styles.select}
               value=""
@@ -48,7 +51,7 @@ export function InputPanel() {
               ))}
             </select>
           )}
-          {colorCube && inputMode === 'manual' && (
+          {(colorCube || shapeMod) && inputMode === 'manual' && (
             <button type="button" className={styles.ghost} onClick={scrambleCube}>
               Scramble
             </button>
@@ -74,7 +77,15 @@ export function InputPanel() {
         </div>
       </div>
 
-      {def.note && <p className={styles.note}>{def.note}</p>}
+      {def.note && !shapeMod && <p className={styles.note}>{def.note}</p>}
+      {shapeMod && (
+        <div className={styles.explainer}>
+          <strong>Why manual?</strong> {def.label} cubes are a single color — there’s nothing for a
+          camera to read. They share the 3×3 mechanism, so enter the equivalent 3×3 below by mapping
+          each piece to where it belongs by its shape (or press Scramble to see one solved). The
+          solution animates on a 3×3 model.
+        </div>
+      )}
       {!solvable && colorCube && (
         <p className={styles.note}>
           Solving {def.label} is experimental and not available yet — you can still scan, paint, and
