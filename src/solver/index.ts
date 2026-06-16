@@ -10,8 +10,9 @@
 import type { FaceletState } from '../state/facelets';
 import type { PuzzleId } from '../state/puzzles';
 import { Alg } from 'cubing/alg';
-import { validate3x3 } from './validate';
+import { validate3x3, validate2x2 } from './validate';
 import { solve3x3 } from './solve3x3';
+import { solve2x2 } from './solve2x2';
 
 export interface SolveResult {
   ok: true;
@@ -38,26 +39,35 @@ function algToTokens(alg: Alg): string[] {
     .filter(Boolean);
 }
 
+function resultFromAlg(alg: Alg): SolveResult {
+  return {
+    ok: true,
+    moves: algToTokens(alg),
+    algString: alg.toString(),
+    setupString: alg.invert().toString(),
+  };
+}
+
 export async function solve(state: FaceletState, puzzleId: PuzzleId): Promise<SolveOutcome> {
-  // 3×3 and the 3×3-based shape-mods.
-  if (puzzleId === '3x3' || puzzleId === 'mirror' || puzzleId === 'ghost') {
-    const v = validate3x3(state);
-    if (!v.ok) return { ok: false, reason: v.reason ?? 'This state can’t be solved.' };
-    try {
-      const alg = await solve3x3(state);
-      return {
-        ok: true,
-        moves: algToTokens(alg),
-        algString: alg.toString(),
-        setupString: alg.invert().toString(),
-      };
-    } catch (e) {
-      return { ok: false, reason: e instanceof Error ? e.message : 'The solver failed on this state.' };
+  try {
+    // 3×3 and the 3×3-based shape-mods.
+    if (puzzleId === '3x3' || puzzleId === 'mirror' || puzzleId === 'ghost') {
+      const v = validate3x3(state);
+      if (!v.ok) return { ok: false, reason: v.reason ?? 'This state can’t be solved.' };
+      return resultFromAlg(await solve3x3(state));
     }
+
+    if (puzzleId === '2x2') {
+      const v = validate2x2(state);
+      if (!v.ok) return { ok: false, reason: v.reason ?? 'This state can’t be solved.' };
+      return resultFromAlg(await solve2x2(state));
+    }
+  } catch (e) {
+    return { ok: false, reason: e instanceof Error ? e.message : 'The solver failed on this state.' };
   }
 
   return {
     ok: false,
-    reason: `${puzzleId} solving isn’t available yet — it arrives in a later phase.`,
+    reason: 'Solving for this puzzle is experimental and not available yet — input and the 3D preview still work.',
   };
 }

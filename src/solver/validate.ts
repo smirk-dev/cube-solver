@@ -5,6 +5,7 @@
 
 import { FACES, centerIndex, isComplete, type FaceletState } from '../state/facelets';
 import { faceletsToPatternData3x3 } from './kpattern3x3';
+import { faceletsToPatternData2x2 } from './kpattern2x2';
 
 export interface ValidationResult {
   ok: boolean;
@@ -95,5 +96,25 @@ export function validate3x3(state: FaceletState): ValidationResult {
     return { ok: false, reason: 'Two pieces look swapped — this exact arrangement can’t be reached on a real cube.' };
   }
 
+  return OK;
+}
+
+/** 2×2 solvability: counts, valid corners, and corner-orientation sum ≡ 0 (mod 3).
+ *  (A 2×2 has no fixed centers/edges, so there is no permutation-parity law.) */
+export function validate2x2(state: FaceletState): ValidationResult {
+  if (state.size !== 2) return { ok: false, reason: 'Expected a 2×2 state.' };
+
+  const counts = validateColorCounts(state);
+  if (!counts.ok) return counts;
+
+  let data;
+  try {
+    data = faceletsToPatternData2x2(state);
+  } catch {
+    return { ok: false, reason: 'That sticker arrangement isn’t a real 2×2 — check for a corner with two of the same color.' };
+  }
+  if (data.CORNERS.orientation.reduce((a, b) => a + b, 0) % 3 !== 0) {
+    return { ok: false, reason: 'A corner is twisted in place — re-check the corner orientations.' };
+  }
   return OK;
 }

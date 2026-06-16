@@ -24,3 +24,25 @@ export const PRESETS_3X3: ScramblePreset[] = [
 export function presetState(scramble: string): FaceletState {
   return applyNotation(solvedState(3), scramble);
 }
+
+const FACES_N = ['U', 'R', 'F', 'D', 'L', 'B'];
+const SUFFIX = ['', "'", '2'];
+
+/** A random scramble string for size n (wide turns included for n > 3). */
+export function randomScramble(n: number, length = n <= 3 ? 20 : 40): string {
+  const out: string[] = [];
+  let prev = -1;
+  for (let i = 0; i < length; i++) {
+    let f = Math.floor(Math.random() * 6);
+    if (f === prev) f = (f + 1) % 6;
+    prev = f;
+    const w = n > 3 && Math.random() < 0.4 ? 'w' : '';
+    out.push(FACES_N[f] + w + SUFFIX[Math.floor(Math.random() * 3)]);
+  }
+  return out.join(' ');
+}
+
+/** A random scrambled facelet state of size n. */
+export function randomScrambledState(n: number): FaceletState {
+  return applyNotation(solvedState(n), randomScramble(n));
+}

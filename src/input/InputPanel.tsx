@@ -14,12 +14,14 @@ export function InputPanel() {
   const solveCurrent = useCubeStore((s) => s.solveCurrent);
   const resetEdit = useCubeStore((s) => s.resetEdit);
   const loadPreset = useCubeStore((s) => s.loadPreset);
+  const scrambleCube = useCubeStore((s) => s.scramble);
   const setEditState = useCubeStore((s) => s.setEditState);
   const scanReview = useCubeStore((s) => s.scanReview);
   const setScanReview = useCubeStore((s) => s.setScanReview);
 
   const def = PUZZLES[puzzleId];
-  const solvable = puzzleId === '3x3'; // Phase 1/2 scope
+  const solvable = puzzleId === '2x2' || puzzleId === '3x3';
+  const colorCube = def.kind === 'color';
 
   const showCamera = inputMode === 'scan' && !scanReview;
   const showGrid = inputMode === 'manual' || (inputMode === 'scan' && scanReview);
@@ -29,7 +31,7 @@ export function InputPanel() {
       <div className={styles.bar}>
         <InputModeToggle />
         <div className={styles.actions}>
-          {solvable && inputMode === 'manual' && (
+          {puzzleId === '3x3' && inputMode === 'manual' && (
             <select
               className={styles.select}
               value=""
@@ -45,6 +47,11 @@ export function InputPanel() {
                 </option>
               ))}
             </select>
+          )}
+          {colorCube && inputMode === 'manual' && (
+            <button type="button" className={styles.ghost} onClick={scrambleCube}>
+              Scramble
+            </button>
           )}
           {inputMode === 'scan' && scanReview && (
             <button type="button" className={styles.ghost} onClick={() => setScanReview(false)}>
@@ -68,9 +75,10 @@ export function InputPanel() {
       </div>
 
       {def.note && <p className={styles.note}>{def.note}</p>}
-      {!solvable && (
+      {!solvable && colorCube && (
         <p className={styles.note}>
-          Solving {def.label} arrives in a later phase — you can still paint and preview it.
+          Solving {def.label} is experimental and not available yet — you can still scan, paint, and
+          preview it in 3D.
         </p>
       )}
       {inputMode === 'scan' && scanReview && (

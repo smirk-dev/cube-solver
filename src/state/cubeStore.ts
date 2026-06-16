@@ -21,7 +21,7 @@ import {
   type Face,
   type FaceletState,
 } from './facelets';
-import { presetState } from './presets';
+import { presetState, randomScrambledState } from './presets';
 import { solve } from '../solver';
 
 export type InputMode = 'scan' | 'manual';
@@ -58,6 +58,7 @@ interface CubeStore {
   setScanReview: (value: boolean) => void;
   resetEdit: () => void;
   loadPreset: (scramble: string) => void;
+  scramble: () => void;
 
   // Solve + playback actions
   solveCurrent: () => Promise<void>;
@@ -137,6 +138,8 @@ export const useCubeStore = create<CubeStore>((set, get) => ({
     })),
 
   loadPreset: (scramble) => set({ editState: presetState(scramble), scanReview: false, ...clearedSolve }),
+
+  scramble: () => set({ editState: randomScrambledState(get().size()), scanReview: false, ...clearedSolve }),
 
   solveCurrent: async () => {
     const { editState, puzzleId } = get();
